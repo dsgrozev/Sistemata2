@@ -68,12 +68,18 @@ namespace Sistemata2
             }
         }
 
-        internal void CalculateMedian()
+        internal static void CalculateMedian()
         {
-            foreach (Metric m in Enum.GetValues(typeof(Metric)))
+            Console.Write("Calculate Teams:");
+            foreach (Team t in Team.Teams)
             {
-                this.means.Add(m, Median(m));
+                foreach (Metric m in Enum.GetValues(typeof(Metric)))
+                {
+                    t.means.Add(m, t.Median(m));
+                }
+                Console.Write(".");
             }
+            Console.WriteLine();
         }
 
         private double Median(Metric metric)
@@ -86,24 +92,28 @@ namespace Sistemata2
                     values.Add(week.results[metric]);
                 }
             }
-            if (values == null || values.Count == 0)
+            if (values.Count == 0)
             {
                 return 0;
             }
-            return Mean(values);
+            return values.Average();
         }
 
-        internal static double Mean(List<int> values)
-        {
-            values.Sort();
-            if (values.Count % 2 != 0)
-            {
-                return values[values.Count / 2];
-            }
-            else
-            {
-                return (double)(values[values.Count / 2] + values[values.Count / 2 - 1]) / 2;
-            }
-        }
+        //internal static double Mean(List<int> values)
+        //{
+        //    if (values.Count == 0)
+        //    {
+        //        return 0;
+        //    }
+        //    values.Sort();
+        //    if (values.Count % 2 != 0)
+        //    {
+        //        return values[values.Count / 2];
+        //    }
+        //    else
+        //    {
+        //        return (double)(values[values.Count / 2] + values[values.Count / 2 - 1]) / 2;
+        //    }
+        //}
     }
 }

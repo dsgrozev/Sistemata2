@@ -50,7 +50,7 @@ namespace Sistemata2
             this.Points = points;
         }
 
-        static readonly List<MetricValue> METRICS = new List<MetricValue>()
+        private static readonly List<MetricValue> METRICS = new List<MetricValue>()
         {
             new MetricValue(Metric.PassYds, .04),
             new MetricValue(Metric.PassTD, 4),
@@ -76,6 +76,11 @@ namespace Sistemata2
             new MetricValue(Metric.Safe, 2),
             new MetricValue(Metric.BlkKick, 2)
         };
+
+        internal static double GetPoints(Metric metric)
+        {
+            return METRICS.Find(x => x.Name == metric).Points;
+        }
     }
 }
 
