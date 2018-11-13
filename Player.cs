@@ -155,22 +155,22 @@ namespace Sistemata2
             foreach(Metric metric in temp.Keys)
             {
                 double std = CalculateStdDev(temp[metric]);
-                double mean = Mean(temp[metric]);
+                double mean = temp[metric].Average();
                 this.lows[metric] = mean - std;
                 this.highs[metric] = mean + std;
                 this.ratings[metric] = mean;
             }
         }
 
-        private double Mean(List<double> list)
-        {
-            if (list.Count == 0)
-                return 0;
-            list.Sort();
-            int size = list.Count;
-            int mid = size / 2;
-            return (size % 2 != 0) ? list[mid] : (list[mid] + list[mid - 1]) / 2;
-        }
+        //private double Mean(List<double> list)
+        //{
+        //    if (list.Count == 0)
+        //        return 0;
+        //    list.Sort();
+        //    int size = list.Count;
+        //    int mid = size / 2;
+        //    return (size % 2 != 0) ? list[mid] : (list[mid] + list[mid - 1]) / 2;
+        //}
 
         private double CalculateStdDev(List<double> values)
         {
