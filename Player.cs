@@ -29,16 +29,18 @@ namespace Sistemata2
 
         internal void AddGame(Game game)
         {
-            Debug.Assert(!this.Games.Contains(game));
-            this.Games.Add(game);
+            if(!this.Games.Contains(game))
+                this.Games.Add(game);
         }
 
         internal static int MinWeek()
         {
-            int minWeek = 17;
+            int minWeek = 20;
             foreach(Player def in Players.Where(x => x.Pos == Position.DEF))
             {
-                minWeek = Math.Min(def.Games.Where(x => x.Played == false).Min().Week, minWeek);
+                var futureGames = def.Games.Where(x => x.Played == false);
+                if (futureGames.Count() > 0)
+                    minWeek = Math.Min(futureGames.Min().Week, minWeek);
             }
             return minWeek;
         }
@@ -56,7 +58,7 @@ namespace Sistemata2
         {
             foreach (Game g in games)
             {
-                this.Games.Add(new Game(g.Week, g.OpponentTeam, g.Played));
+                this.Games.Add(new Game(g.Week, g.OpponentTeam, g.Played, g.HomeGame));
             }
         }
         internal static void CalculatePoints()
@@ -155,11 +157,45 @@ namespace Sistemata2
             foreach(Metric metric in temp.Keys)
             {
                 double std = CalculateStdDev(temp[metric]);
-                double mean = temp[metric].Average();
+                double mean = CalcAdvMean(temp[metric]);
+                //double mean = temp[metric].Average();
                 this.lows[metric] = mean - std;
                 this.highs[metric] = mean + std;
                 this.ratings[metric] = mean;
             }
+        }
+
+        internal double CalcAdvMean(List<double> list)
+        {
+            int arraySize = 0;
+            if (list.Count < 3)
+                return list.Average();
+            else if (list.Count < 5)
+                arraySize = list.Count + 2;
+            else
+                arraySize = list.Count + 8;
+
+            double[] arr = new double[arraySize];
+            list.CopyTo(arr);
+
+            if (list.Count < 5) {
+                arr[list.Count] = list[list.Count - 2];
+                arr[list.Count + 1] = list[list.Count - 1];
+            }
+            else
+            {
+                arr[list.Count] = list[list.Count - 4];
+                arr[list.Count + 1] = list[list.Count - 3];
+                for (int j = 0; j < 3; j++)
+                {
+                    arr[list.Count + 2 + j] = list[list.Count - 2];
+                }
+                for (int j = 0; j < 3; j++)
+                {
+                    arr[list.Count + 5 + j] = list[list.Count - 1];
+                }
+            }
+            return arr.Average();
         }
 
         //private double Mean(List<double> list)

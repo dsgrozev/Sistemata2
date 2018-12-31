@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
@@ -30,7 +31,7 @@ namespace Sistemata2
 
         private void CalcPlayerRatings(string position, bool onlyPoints)
         {
-            int lastWeek = 16;
+            int lastWeek = 17;
             if (position != "DEF")
             {
                 lastWeek = Player.MinWeek();
@@ -94,6 +95,7 @@ namespace Sistemata2
             var oppString = fields[i - 1];
             string oppTeam = "";
 
+            bool homeGame = true;
             if (oppString == "Bye")
             {
                 oppTeam = "Bye";
@@ -105,6 +107,7 @@ namespace Sistemata2
             else
             {
                 oppTeam = oppString.Split('@')[1].Trim();
+                homeGame = false;
             }
 
             if (!Char.IsLetter(oppTeam[oppTeam.Length - 1]))
@@ -137,12 +140,12 @@ namespace Sistemata2
 
             if (oppTeam != "Bye" && position == "DEF" && gamesPlayed != "1")
             {
-                p.AddGame(new Game(week, opp, false));
+                p.AddGame(new Game(week, opp, false, homeGame));
             }
 
             if (gamesPlayed == "1" && oppTeam != "Bye")
             {
-                Game game = new Game(week, opp, true);
+                Game game = new Game(week, opp, true, homeGame);
                 UpdateGame(game, position, fields);
                 p.AddGame(game);
                 opp.AddGame(game);
@@ -173,10 +176,10 @@ namespace Sistemata2
             game.AddMetric(Metric.PassYds, ExtractValue(fields, i++));
             game.AddMetric(Metric.PassTD, ExtractValue(fields, i++));
             game.AddMetric(Metric.PassInt, ExtractValue(fields, i++));
-            i++; // Att            
+            game.AddMetric(Metric.Att, ExtractValue(fields, i++));
             game.AddMetric(Metric.RushYds, ExtractValue(fields, i++));
             game.AddMetric(Metric.RushTD, ExtractValue(fields, i++));
-            i++; // Tgt
+            game.AddMetric(Metric.Tgt, ExtractValue(fields, i++));
             game.AddMetric(Metric.Rec, ExtractValue(fields, i++));
             game.AddMetric(Metric.RecYds, ExtractValue(fields, i++));
             game.AddMetric(Metric.RecTD, ExtractValue(fields, i++));
@@ -225,7 +228,8 @@ namespace Sistemata2
             {
                 Proxy = null
             };
-
+            //opt.AddArgument(@"load-extension=3.4.2_0\Adblock-Plus_v1.12.4.crx");
+            
             ChromeDriver driver = new ChromeDriver(@"C:\Users\Dimitar\Downloads\selenium-dotnet-3.5.1\", opt)
             {
                 Url = "https://login.yahoo.com"

@@ -96,7 +96,41 @@ namespace Sistemata2
             {
                 return 0;
             }
-            return values.Average();
+            return CalcAdvMean(values);//values.Average();
+        }
+
+        private double CalcAdvMean(List<int> list)
+        {
+            int arraySize = 0;
+            if (list.Count < 3)
+                return list.Average();
+            else if (list.Count < 5)
+                arraySize = list.Count + 2;
+            else
+                arraySize = list.Count + 8;
+
+            int[] arr = new int[arraySize];
+            list.CopyTo(arr);
+
+            if (list.Count < 5)
+            {
+                arr[list.Count] = list[list.Count - 2];
+                arr[list.Count + 1] = list[list.Count - 1];
+            }
+            else
+            {
+                arr[list.Count] = list[list.Count - 4];
+                arr[list.Count + 1] = list[list.Count - 3];
+                for (int j = 0; j < 3; j++)
+                {
+                    arr[list.Count + 2 + j] = list[list.Count - 2];
+                }
+                for (int j = 0; j < 3; j++)
+                {
+                    arr[list.Count + 5 + j] = list[list.Count - 1];
+                }
+            }
+            return arr.Average();
         }
 
         //internal static double Mean(List<int> values)

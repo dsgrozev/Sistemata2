@@ -12,12 +12,14 @@ namespace Sistemata2
         public double ExpectedPoints { get; internal set; }
         public double High { get; internal set; }
         public double Low { get; internal set; }
+        public bool HomeGame { get; internal set; }
 
-        public Game(int week, Team opponentTeam, Boolean played)
+        public Game(int week, Team opponentTeam, bool played, bool homeGame)
         {
             this.Played = played;
-            Week = week;
-            OpponentTeam = opponentTeam;
+            this.Week = week;
+            this.OpponentTeam = opponentTeam;
+            this.HomeGame = homeGame;
         }
 
         public Game()
