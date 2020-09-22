@@ -1,14 +1,18 @@
-﻿namespace Sistemata2
+﻿using System.IO;
+
+namespace Sistemata2
 {
     class Program
     {
         static void Main(string[] args)
         {
-            WebDriver dr = new WebDriver("849675", "2018");
+            LeagueData leagueData = MetricValue.Init(File.ReadAllText(@"C:\ff\System.json"));
+            //LeagueData leagueData = MetricValue.Init(File.ReadAllText(@"C:\ff\Doom.json"));
+            WebDriver dr = new WebDriver(leagueData.leagueId);
             dr.Execute();
             Team.CalculateMedian();
             Player.CalculatePoints();
-            ExcelExport.Export();
+            ExcelExport.Export(leagueData.leagueId);
         }
     }
 }

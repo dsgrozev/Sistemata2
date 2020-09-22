@@ -32,14 +32,14 @@ namespace Sistemata2
             new Team("New Orleans Saints", "NO"),
             new Team("New York Giants", "NYG"),
             new Team("New York Jets", "NYJ"),
-            new Team("Oakland Raiders", "Oak"),
+            new Team("Las Vegas Raiders", "LV"),
             new Team("Philadelphia Eagles", "Phi"),
             new Team("Pittsburgh Steelers", "Pit"),
             new Team("San Francisco 49ers", "SF"),
             new Team("Seattle Seahawks", "Sea"),
             new Team("Tampa Bay Buccaneers", "TB"),
             new Team("Tennessee Titans", "Ten"),
-            new Team("Washington Redskins", "Was")
+            new Team("Washington Football Team", "Was")
         };
 
         public Team(string fullName, string shortName)
@@ -103,11 +103,17 @@ namespace Sistemata2
         {
             int arraySize = 0;
             if (list.Count < 3)
+            {
                 return list.Average();
+            }
             else if (list.Count < 5)
+            {
                 arraySize = list.Count + 2;
+            }
             else
+            {
                 arraySize = list.Count + 8;
+            }
 
             int[] arr = new int[arraySize];
             list.CopyTo(arr);

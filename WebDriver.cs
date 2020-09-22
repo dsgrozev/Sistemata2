@@ -1,24 +1,21 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
 namespace Sistemata2
 {
     class WebDriver
     {
-        private ChromeDriver driver = null;
+        private FirefoxDriver driver = null;
         private string leagueNumber;
-        private string year;
 
-        public WebDriver(string leagueNumber, string year)
+        public WebDriver(string leagueNumber)
         {
             this.driver = this.StartDriver(); ;
             this.leagueNumber = leagueNumber;
-            this.year = year;
         }
 
         public void Execute()
@@ -31,7 +28,7 @@ namespace Sistemata2
 
         private void CalcPlayerRatings(string position, bool onlyPoints)
         {
-            int lastWeek = 17;
+            int lastWeek = 16;
             if (position != "DEF")
             {
                 lastWeek = Player.MinWeek();
@@ -173,6 +170,12 @@ namespace Sistemata2
         private void UpdateOffGame(Game game, string[] fields)
         {
             int i = fields.Length - 13;
+            bool fum = false;
+            if (MetricValue.METRICS.FindIndex(x => x.TextName == "Fum") >= 0)
+            {
+                fum = true;
+                i--;
+            }
             game.AddMetric(Metric.PassYds, ExtractValue(fields, i++));
             game.AddMetric(Metric.PassTD, ExtractValue(fields, i++));
             game.AddMetric(Metric.PassInt, ExtractValue(fields, i++));
@@ -185,6 +188,10 @@ namespace Sistemata2
             game.AddMetric(Metric.RecTD, ExtractValue(fields, i++));
             game.AddMetric(Metric.RetTD, ExtractValue(fields, i++));
             game.AddMetric(Metric.TwoPt, ExtractValue(fields, i++));
+            if (fum)
+            {
+                game.AddMetric(Metric.Fum, ExtractValue(fields, i++));
+            }
             game.AddMetric(Metric.FumLost, ExtractValue(fields, i++));
         }
 
@@ -219,28 +226,54 @@ namespace Sistemata2
             game.AddMetric(Metric.FumRec, int.Parse(fields[i++]));
             game.AddMetric(Metric.DefTD, int.Parse(fields[i++]));
             game.AddMetric(Metric.BlkKick, int.Parse(fields[i++]));
-            game.AddMetric(Metric.RetTD, int.Parse(fields[i++]));
+            game.AddMetric(Metric.DefRetTD, int.Parse(fields[i++]));
         }
 
-        private ChromeDriver StartDriver()
+        private FirefoxDriver StartDriver()
         {
-            ChromeOptions opt = new ChromeOptions
+            FirefoxOptions ffo = new FirefoxOptions();
+            ffo.AddArguments(new[] {"--private"});
+            ffo.SetPreference("pageLoadStrategy", "eager");
+            while (driver == null)
             {
-                Proxy = null
-            };
-            //opt.AddArgument(@"load-extension=3.4.2_0\Adblock-Plus_v1.12.4.crx");
-            
-            ChromeDriver driver = new ChromeDriver(@"C:\Users\Dimitar\Downloads\selenium-dotnet-3.5.1\", opt)
-            {
-                Url = "https://login.yahoo.com"
-            };
+                try
+                {
+                    driver = new FirefoxDriver(ffo);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            driver.Url = "https://login.yahoo.com";
+
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
             var elem = wait.Until(ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
             elem.SendKeys("dsgrozev@hotmail.com");
             driver.FindElementById("login-signin").Click();
-            //Console.ReadLine();
             return driver;
         }
+
+        //private ChromeDriver StartDriver()
+        //{
+        //    //ChromeOptions opt = new ChromeOptions
+        //    //{
+        //    //    Proxy = null
+        //    //};
+        //    //opt.AddArgument(@"load-extension=3.4.2_0\Adblock-Plus_v1.12.4.crx");
+            
+        //    ChromeDriver driver = new ChromeDriver(@"C:\Users\Dimitar\Downloads\selenium-dotnet-3.5.1\")
+        //    {
+        //        Url = "https://login.yahoo.com"
+        //    };
+        //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        //    var elem = wait.Until(ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
+        //    elem.SendKeys("dsgrozev@hotmail.com");
+        //    driver.FindElementById("login-signin").Click();
+        //    //Console.ReadLine();
+        //    return driver;
+        //}
     }
 }
