@@ -251,7 +251,7 @@ namespace Sistemata2
 
             var elem = wait.Until(ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
             elem.SendKeys("dsgrozev@hotmail.com");
-            driver.FindElementById("login-signin").Click();
+            //driver.FindElementById("login-signin").Click();
             return driver;
         }
 
