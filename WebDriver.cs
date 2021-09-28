@@ -28,7 +28,7 @@ namespace Sistemata2
 
         private void CalcPlayerRatings(string position, bool onlyPoints)
         {
-            int lastWeek = 16;
+            int lastWeek = Program.lastWeek;
             if (position != "DEF")
             {
                 lastWeek = Player.MinWeek();
@@ -42,21 +42,27 @@ namespace Sistemata2
                 do
                 {
                     IWebElement table = null;
-                    driver.Navigate().GoToUrl(@"https://football.fantasysports.yahoo.com/f1/" + this.leagueNumber + 
-                        "/players?status=ALL&pos=" + position + "&cut_type=9&stat1=S_W_" + i + "&sort=0&sdir=1&count=" + count);
-                    while (true)
+                    do
                     {
-                        try
+                        driver.Navigate().GoToUrl(@"https://football.fantasysports.yahoo.com/f1/" + this.leagueNumber +
+                            "/players?status=ALL&pos=" + position + "&cut_type=9&stat1=S_W_" + i + "&sort=0&sdir=1&count=" + count);
+                        int j = 0;
+                        while (j < 10)
                         {
-                            table = new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(
-                                ExpectedConditions.ElementIsVisible(By.Id("players-table-wrapper")));
-                            break;
+                            try
+                            {
+                                table = new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(
+                                    ExpectedConditions.ElementIsVisible(By.Id("players-table-wrapper")));
+                                break;
+                            }
+                            catch (Exception)
+                            {
+                                Thread.Sleep(1000);
+                            }
+                            j++;
                         }
-                        catch (Exception)
-                        {
-                            Thread.Sleep(1000);
-                        }
-                    }
+                    } while (table == null);
+
                     var rows = table.FindElements(By.TagName("tr"));
                     rowCount = rows.Count;
 

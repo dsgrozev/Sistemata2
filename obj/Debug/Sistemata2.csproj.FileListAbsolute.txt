@@ -1,10 +1,10 @@
+C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.csproj.ResolveComReference.cache
+C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.csproj.CoreCompileInputs.cache
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\bin\Debug\Sistemata2.exe.config
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\bin\Debug\Sistemata2.exe
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\bin\Debug\Sistemata2.pdb
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.csproj.ResolveComReference.cache
-C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.csproj.CoreCompileInputs.cache
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.csproj.CopyComplete
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.exe
 C:\Users\Dimitar\source\repos\Sistemata2\Sistemata2\obj\Debug\Sistemata2.pdb

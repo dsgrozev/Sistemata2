@@ -88,7 +88,7 @@ namespace Sistemata2
 
                 int minWeek = Player.MinWeek();
 
-                for (int i = minWeek; i < 17; i++)
+                for (int i = minWeek; i < Program.lastWeek + 1; i++)
                 {
                     workSheet.Cells[1, col++] = "Week " + i;
                 }
@@ -102,7 +102,7 @@ namespace Sistemata2
                     workSheet.Cells[row, col++] = p.Pos.ToString();
                     workSheet.Cells[row, col++] = p.Games.Sum(x => x.ExpectedPoints);
 
-                    for (int i = minWeek; i < 17; i++)
+                    for (int i = minWeek; i < Program.lastWeek + 1; i++)
                     {
                         workSheet.Cells[row, col++] = p.GetGame(i).ExpectedPoints;
                     }

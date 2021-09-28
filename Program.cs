@@ -4,6 +4,7 @@ namespace Sistemata2
 {
     class Program
     {
+        public static int lastWeek = 17;
         static void Main(string[] args)
         {
             LeagueData leagueData = MetricValue.Init(File.ReadAllText(@"C:\ff\System.json"));
