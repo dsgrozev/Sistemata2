@@ -19,6 +19,11 @@ namespace Sistemata2
         private readonly Dictionary<Metric, double> lows = new Dictionary<Metric, double>();
         private readonly Dictionary<Metric, double> highs = new Dictionary<Metric, double>();
 
+        public static void Reset()
+        {
+            Players.Clear();
+        }
+
         public Player(string name, Position pos, string owner, Team team)
         {
             Name = name;
@@ -107,6 +112,15 @@ namespace Sistemata2
                         game.ExpectedPoints += this.ratings[metric] * game.OpponentTeam.means[metric] * points;
                         game.Low += this.lows[metric] * game.OpponentTeam.means[metric] * points;
                         game.High += this.highs[metric] * game.OpponentTeam.means[metric] * points;
+                        if (metric.ToString().Contains("TD"))
+                        {
+                            int tdPoints = 6;
+                            if (metric == Metric.PassTD)
+                            {
+                                tdPoints = 4;
+                            }
+                            game.ExpectedTDs += this.ratings[metric] * game.OpponentTeam.means[metric] * points / tdPoints;
+                        }
                     }
                     else
                     {

@@ -84,13 +84,14 @@ namespace Sistemata2
                 workSheet.Cells[1, col++] = "Name";
                 workSheet.Cells[1, col++] = "Owner";
                 workSheet.Cells[1, col++] = "Position";
+                workSheet.Cells[1, col++] = "Team";
                 workSheet.Cells[1, col++] = "Rest of season";
 
                 int minWeek = Player.MinWeek();
 
                 for (int i = minWeek; i < Program.lastWeek + 1; i++)
                 {
-                    workSheet.Cells[1, col++] = "Week " + i;
+                    workSheet.Cells[1, col++] = "Week " + i + " Points";
                 }
 
                 row = 2; // start row (in row 1 are header cells)
@@ -100,6 +101,7 @@ namespace Sistemata2
                     workSheet.Cells[row, col++] = p.Name;
                     workSheet.Cells[row, col++] = p.Owner;
                     workSheet.Cells[row, col++] = p.Pos.ToString();
+                    workSheet.Cells[row, col++] = p.Team.ShortName;
                     workSheet.Cells[row, col++] = p.Games.Sum(x => x.ExpectedPoints);
 
                     for (int i = minWeek; i < Program.lastWeek + 1; i++)

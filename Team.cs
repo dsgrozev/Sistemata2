@@ -6,41 +6,50 @@ namespace Sistemata2
 {
     public class Team
     {
-        public readonly static List<Team> Teams = new List<Team>()
+        public static List<Team> Teams;
+
+        public static void Init()
         {
-            new Team("Arizona Cardinals", "Ari"),
-            new Team("Atlanta Falcons", "Atl"),
-            new Team("Baltimore Ravens", "Bal"),
-            new Team("Buffalo Bills", "Buf"),
-            new Team("Carolina Panthers", "Car"),
-            new Team("Chicago Bears", "Chi"),
-            new Team("Cincinnati Bengals", "Cin"),
-            new Team("Cleveland Browns", "Cle"),
-            new Team("Dallas Cowboys", "Dal"),
-            new Team("Denver Broncos", "Den"),
-            new Team("Detroit Lions", "Det"),
-            new Team("Green Bay Packers", "GB"),
-            new Team("Houston Texans", "Hou"),
-            new Team("Indianapolis Colts", "Ind"),
-            new Team("Jacksonville Jaguars", "Jax"),
-            new Team("Kansas City Chiefs", "KC"),
-            new Team("Los Angeles Rams", "LAR"),
-            new Team("Los Angeles Chargers", "LAC"),
-            new Team("Miami Dolphins", "Mia"),
-            new Team("Minnesota Vikings", "Min"),
-            new Team("New England Patriots", "NE"),
-            new Team("New Orleans Saints", "NO"),
-            new Team("New York Giants", "NYG"),
-            new Team("New York Jets", "NYJ"),
-            new Team("Las Vegas Raiders", "LV"),
-            new Team("Philadelphia Eagles", "Phi"),
-            new Team("Pittsburgh Steelers", "Pit"),
-            new Team("San Francisco 49ers", "SF"),
-            new Team("Seattle Seahawks", "Sea"),
-            new Team("Tampa Bay Buccaneers", "TB"),
-            new Team("Tennessee Titans", "Ten"),
-            new Team("Washington Football Team", "Was")
-        };
+            Teams = new List<Team>()
+            {
+                new Team("Arizona Cardinals", "Ari"),
+                new Team("Atlanta Falcons", "Atl"),
+                new Team("Baltimore Ravens", "Bal"),
+                new Team("Buffalo Bills", "Buf"),
+                new Team("Carolina Panthers", "Car"),
+                new Team("Chicago Bears", "Chi"),
+                new Team("Cincinnati Bengals", "Cin"),
+                new Team("Cleveland Browns", "Cle"),
+                new Team("Dallas Cowboys", "Dal"),
+                new Team("Denver Broncos", "Den"),
+                new Team("Detroit Lions", "Det"),
+                new Team("Green Bay Packers", "GB"),
+                new Team("Houston Texans", "Hou"),
+                new Team("Indianapolis Colts", "Ind"),
+                new Team("Jacksonville Jaguars", "Jax"),
+                new Team("Kansas City Chiefs", "KC"),
+                new Team("Los Angeles Rams", "LAR"),
+                new Team("Los Angeles Chargers", "LAC"),
+                new Team("Miami Dolphins", "Mia"),
+                new Team("Minnesota Vikings", "Min"),
+                new Team("New England Patriots", "NE"),
+                new Team("New Orleans Saints", "NO"),
+                new Team("New York Giants", "NYG"),
+                new Team("New York Jets", "NYJ"),
+                new Team("Las Vegas Raiders", "LV"),
+                new Team("Philadelphia Eagles", "Phi"),
+                new Team("Pittsburgh Steelers", "Pit"),
+                new Team("San Francisco 49ers", "SF"),
+                new Team("Seattle Seahawks", "Sea"),
+                new Team("Tampa Bay Buccaneers", "TB"),
+                new Team("Tennessee Titans", "Ten"),
+                new Team("Washington Football Team", "Was")
+            };
+        }
+
+        public static void Delete() {
+            Teams = null;
+        }
 
         public Team(string fullName, string shortName)
         {
@@ -101,7 +110,7 @@ namespace Sistemata2
 
         private double CalcAdvMean(List<int> list)
         {
-            int arraySize = 0;
+            int arraySize;
             if (list.Count < 3)
             {
                 return list.Average();

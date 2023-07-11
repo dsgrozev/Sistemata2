@@ -5,15 +5,22 @@ namespace Sistemata2
     class Program
     {
         public static int lastWeek = 17;
-        static void Main(string[] args)
+        static void Main()
         {
-            LeagueData leagueData = MetricValue.Init(File.ReadAllText(@"C:\ff\System.json"));
-            //LeagueData leagueData = MetricValue.Init(File.ReadAllText(@"C:\ff\Doom.json"));
-            WebDriver dr = new WebDriver(leagueData.leagueId);
-            dr.Execute();
-            Team.CalculateMedian();
-            Player.CalculatePoints();
-            ExcelExport.Export(leagueData.leagueId);
+            WebDriver dr = new WebDriver();
+            string[] leagues = new string[] { @"C:\ff\Doom.json" };
+            for (int i = 0; i < leagues.Length; i++)
+            {
+                Team.Init();
+                LeagueData leagueData = MetricValue.Init(File.ReadAllText(leagues[i]));
+                dr.Execute(leagueData.leagueId);
+                Team.CalculateMedian();
+                Player.CalculatePoints();
+                ExcelExport.Export(leagueData.leagueId);
+                Team.Delete();
+                Player.Reset();
+            }
+            dr.Quit();
         }
     }
 }

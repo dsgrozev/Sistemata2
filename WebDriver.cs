@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
@@ -9,24 +10,26 @@ namespace Sistemata2
 {
     class WebDriver
     {
-        private FirefoxDriver driver = null;
-        private string leagueNumber;
-
-        public WebDriver(string leagueNumber)
+        private ChromeDriver driver = null;
+ 
+        public WebDriver()
         {
-            this.driver = this.StartDriver(); ;
-            this.leagueNumber = leagueNumber;
+            this.driver = this.StartDriver();
         }
 
-        public void Execute()
+        public void Quit()
         {
-            CalcPlayerRatings("DEF", false);
-            CalcPlayerRatings("O", true);
-            CalcPlayerRatings("K", true);
-            driver.Quit();
+            this.driver.Quit();
         }
 
-        private void CalcPlayerRatings(string position, bool onlyPoints)
+        public void Execute(string leagueNumber)
+        {
+            CalcPlayerRatings("DEF", false, leagueNumber);
+            CalcPlayerRatings("O", true, leagueNumber);
+            CalcPlayerRatings("K", true, leagueNumber);
+        }
+
+        private void CalcPlayerRatings(string position, bool onlyPoints, string leagueNumber)
         {
             int lastWeek = Program.lastWeek;
             if (position != "DEF")
@@ -44,15 +47,22 @@ namespace Sistemata2
                     IWebElement table = null;
                     do
                     {
-                        driver.Navigate().GoToUrl(@"https://football.fantasysports.yahoo.com/f1/" + this.leagueNumber +
-                            "/players?status=ALL&pos=" + position + "&cut_type=9&stat1=S_W_" + i + "&sort=0&sdir=1&count=" + count);
+                        try
+                        {
+                            driver.Navigate().GoToUrl(@"https://football.fantasysports.yahoo.com/f1/" + leagueNumber +
+                                "/players?status=ALL&pos=" + position + "&cut_type=9&stat1=S_W_" + i + "&sort=0&sdir=1&count=" + count);
+                        }
+                        catch (WebDriverException)
+                        {
+                            continue;
+                        }
                         int j = 0;
                         while (j < 10)
                         {
                             try
                             {
                                 table = new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(
-                                    ExpectedConditions.ElementIsVisible(By.Id("players-table-wrapper")));
+                                    SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("players-table-wrapper")));
                                 break;
                             }
                             catch (Exception)
@@ -203,8 +213,7 @@ namespace Sistemata2
 
         private int ExtractValue(string[] fields, int i)
         {
-            int temp = 0;
-            if (int.TryParse(fields[i], out temp))
+            if (int.TryParse(fields[i], out int temp))
             {
                 return temp;
             }
@@ -214,12 +223,36 @@ namespace Sistemata2
         private void UpdateKickGame(Game game, string[] fields)
         {
             int i = fields.Length - 6;
-            game.AddMetric(Metric.FG19, int.Parse(fields[i++]));
-            game.AddMetric(Metric.FG29, int.Parse(fields[i++]));
-            game.AddMetric(Metric.FG39, int.Parse(fields[i++]));
-            game.AddMetric(Metric.FG49, int.Parse(fields[i++]));
-            game.AddMetric(Metric.FG50, int.Parse(fields[i++]));
-            game.AddMetric(Metric.PAT, int.Parse(fields[i++]));
+            int temp;
+            if (!int.TryParse(fields[i++], out temp)){
+                temp = 0;
+            }
+            game.AddMetric(Metric.FG19, temp);
+            if (!int.TryParse(fields[i++], out temp))
+            {
+                temp = 0;
+            }
+            game.AddMetric(Metric.FG29, temp);
+            if (!int.TryParse(fields[i++], out temp))
+            {
+                temp = 0;
+            }
+            game.AddMetric(Metric.FG39, temp);
+            if (!int.TryParse(fields[i++], out temp))
+            {
+                temp = 0;
+            }
+            game.AddMetric(Metric.FG49, temp);
+            if (!int.TryParse(fields[i++], out temp))
+            {
+                temp = 0;
+            }
+            game.AddMetric(Metric.FG50, temp);
+            if (!int.TryParse(fields[i++], out temp))
+            {
+                temp = 0;
+            }
+            game.AddMetric(Metric.PAT, temp);
         }
 
         private void UpdateDefGame(Game game, string[] fields)
@@ -235,51 +268,51 @@ namespace Sistemata2
             game.AddMetric(Metric.DefRetTD, int.Parse(fields[i++]));
         }
 
-        private FirefoxDriver StartDriver()
-        {
-            FirefoxOptions ffo = new FirefoxOptions();
-            ffo.AddArguments(new[] {"--private"});
-            ffo.SetPreference("pageLoadStrategy", "eager");
-            while (driver == null)
-            {
-                try
-                {
-                    driver = new FirefoxDriver(ffo);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-            driver.Url = "https://login.yahoo.com";
-
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-            var elem = wait.Until(ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
-            elem.SendKeys("dsgrozev@hotmail.com");
-            //driver.FindElementById("login-signin").Click();
-            return driver;
-        }
-
-        //private ChromeDriver StartDriver()
+        //private FirefoxDriver StartDriver()
         //{
-        //    //ChromeOptions opt = new ChromeOptions
-        //    //{
-        //    //    Proxy = null
-        //    //};
-        //    //opt.AddArgument(@"load-extension=3.4.2_0\Adblock-Plus_v1.12.4.crx");
-            
-        //    ChromeDriver driver = new ChromeDriver(@"C:\Users\Dimitar\Downloads\selenium-dotnet-3.5.1\")
+        //    FirefoxOptions ffo = new FirefoxOptions();
+        //    ffo.AddArguments(new[] {"--private"});
+        //    ffo.SetPreference("pageLoadStrategy", "eager");
+        //    while (driver == null)
         //    {
-        //        Url = "https://login.yahoo.com"
-        //    };
+        //        try
+        //        {
+        //            driver = new FirefoxDriver(ffo);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //        }
+        //    }
+        //    driver.Url = "https://login.yahoo.com";
+
         //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
-        //    var elem = wait.Until(ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
+        //    var elem = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
         //    elem.SendKeys("dsgrozev@hotmail.com");
-        //    driver.FindElementById("login-signin").Click();
-        //    //Console.ReadLine();
+        //    //driver.FindElementById("login-signin").Click();
         //    return driver;
         //}
+
+        private ChromeDriver StartDriver()
+        {
+            //ChromeOptions opt = new ChromeOptions
+            //{
+            //    Proxy = null
+            //};
+            //opt.AddArgument(@"load-extension=3.4.2_0\Adblock-Plus_v1.12.4.crx");
+
+            ChromeDriver driver = new ChromeDriver(@"C:\Users\Dimitar\Downloads\CD\")
+            {
+                Url = "https://login.yahoo.com"
+            };
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+            var elem = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable((By.CssSelector("input.phone-no#login-username")))); ;
+            elem.SendKeys("dsgrozev@hotmail.com");
+            //driver.FindElementById("login-signin").Click();
+            Console.ReadLine();
+            return driver;
+        }
     }
 }

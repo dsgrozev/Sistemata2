@@ -10,6 +10,7 @@ namespace Sistemata2
         public bool Played { get; internal set; }
         public readonly Dictionary<Metric, int> Record = new Dictionary<Metric, int>();
         public double ExpectedPoints { get; internal set; }
+        public double ExpectedTDs { get; internal set; }
         public double High { get; internal set; }
         public double Low { get; internal set; }
         public bool HomeGame { get; internal set; }
